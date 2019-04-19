@@ -36,9 +36,9 @@ int main(int argc, char **argv)
 	std::string file_path_l;
 	std::string file_path_r;
 	float frequency = 30;
-	nh.param<std::string>("file_l", file_path_l, package_path+"/src/left.png");
+	nh.param<std::string>("file_l", file_path_l, package_path+"/src/view1.png");
 	nh.param("frequency", frequency, (float)30);	// in hz
-	nh.param<std::string>("file_r", file_path_r, package_path+"/src/right.png");
+	nh.param<std::string>("file_r", file_path_r, package_path+"/src/view5.png");
 	nh.param("frequency", frequency, (float)30);	// in hz
 
 	// Creating image publisher object using image_transport
