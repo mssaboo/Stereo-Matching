@@ -159,13 +159,13 @@ int main(int argc, char **argv)
 		cout << "MAX_DISP:" << MAX_DISP << endl;
 		cout << "MIN_DISP:" << MIN_DISP << endl;
 
-		for(int i=0; i<ROW; i++)
-		{
-			for(int j=0; j<COL; j++)
-			{
-				disp_img.at<uchar>(i,j) = 63+(int)192.0*(disp[i][j]-disparity_min)/disparity_range;
-			}
-		}
+//		for(int i=0; i<ROW; i++)
+//		{
+//			for(int j=0; j<COL; j++)
+//			{
+//				disp_img.at<uchar>(i,j) = 63+(int)192.0*(disp[i][j]-disparity_min)/disparity_range;
+//			}
+//		}
 		cout<<"SSD Image saved"<<endl;
 		imwrite("disparity_ssd.png", disp_img);
 
