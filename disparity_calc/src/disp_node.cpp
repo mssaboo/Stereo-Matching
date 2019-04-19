@@ -37,9 +37,9 @@ int main(int argc, char **argv)
 	std::string file_path_r;
 	float frequency = 30;
 	nh.param<std::string>("file_l", file_path_l, package_path+"/src/view1.png");
-	nh.param("frequency", frequency, (float)30);	// in hz
+	nh.param("frequency", frequency, (float)30);	
 	nh.param<std::string>("file_r", file_path_r, package_path+"/src/view5.png");
-	nh.param("frequency", frequency, (float)30);	// in hz
+	nh.param("frequency", frequency, (float)30);	
 
 	// Creating image publisher object using image_transport
 	image_transport::ImageTransport it_file_l(nh);
@@ -51,7 +51,7 @@ int main(int argc, char **argv)
 
 	// Reading the image and converting it to a ROS message
 	cv_bridge::CvImage cvb_image_l;
-	cvb_image_l.image = cv::imread(file_path_l);	// note: this defaults to BGR8
+	cvb_image_l.image = cv::imread(file_path_l);	
 	sensor_msgs::Image ros_image_l = *(cvb_image_l.toImageMsg());
 	ros_image_l.header.frame_id = "image_from_file_l";
 	ros_image_l.encoding = sensor_msgs::image_encodings::BGR8;
@@ -61,7 +61,7 @@ int main(int argc, char **argv)
 
 	// Reading the image and converting it to a ROS message
 	cv_bridge::CvImage cvb_image_r;
-	cvb_image_r.image = cv::imread(file_path_r);	// note: this defaults to BGR8
+	cvb_image_r.image = cv::imread(file_path_r);	
 	sensor_msgs::Image ros_image_r = *(cvb_image_r.toImageMsg());
 	ros_image_r.header.frame_id = "image_from_file_r";
 	ros_image_r.encoding = sensor_msgs::image_encodings::BGR8;
@@ -146,26 +146,14 @@ int main(int argc, char **argv)
 				for(int j=0; j<COL; j++)
 				{
 					disp_img.at<uchar>(p,j) = 63+(int)192.0*(disp[p][j]-disparity_min)/disparity_range;
-					if(MAX_DISP < disp[p][j])
-						MAX_DISP = disp[p][j];
-					if(disp[p][j] < MIN_DISP)
-						MIN_DISP = disp[p][j];
+		
 				}
 			}
-			//imshow("disparity", disp_img);
+		
 
 		}
 
-		cout << "MAX_DISP:" << MAX_DISP << endl;
-		cout << "MIN_DISP:" << MIN_DISP << endl;
 
-//		for(int i=0; i<ROW; i++)
-//		{
-//			for(int j=0; j<COL; j++)
-//			{
-//				disp_img.at<uchar>(i,j) = 63+(int)192.0*(disp[i][j]-disparity_min)/disparity_range;
-//			}
-//		}
 		cout<<"SSD Image saved"<<endl;
 		imwrite("disparity_ssd.png", disp_img);
 
@@ -174,8 +162,8 @@ int main(int argc, char **argv)
 	cv::Ptr<StereoBM> leftSBM = StereoBM::create(64,7);
 	Mat disp1, disp8;
 	leftSBM->compute( cvb_image_l_gray.image, cvb_image_r_gray.image, disp1 );
-	normalize(disp1, disp8, 0, 255, CV_MINMAX, CV_8U);
-  cv::imwrite("disparity_inbuilt.png",disp8);
+	normalize(disp1, disp8, 0, 255, CV_MINMAX, CV_8UC1);
+  	cv::imwrite("disparity_inbuilt.png",disp8);
 	cout<<"Inbuilt code image saved"<<endl;
 
 
@@ -191,7 +179,7 @@ int main(int argc, char **argv)
 
 	// Reading the image and converting it to a ROS message
 	cv_bridge::CvImage cvb_image_disp_ssd;
-	cvb_image_disp_ssd.image = cv::imread("disparity_ssd.png");	// note: this defaults to BGR8
+	cvb_image_disp_ssd.image = cv::imread("disparity_ssd.png");	
 	sensor_msgs::Image ros_image_disp_ssd = *(cvb_image_disp_ssd.toImageMsg());
 	ros_image_disp_ssd.header.frame_id = "image_from_file_disp_ssd";
 	ros_image_disp_ssd.encoding = sensor_msgs::image_encodings::BGR8;
@@ -199,7 +187,7 @@ int main(int argc, char **argv)
 
 	// Reading the image and converting it to a ROS message
 	cv_bridge::CvImage cvb_image_disp_ib;
-	cvb_image_disp_ib.image = cv::imread("disparity_inbuit.png");	// note: this defaults to BGR8
+	cvb_image_disp_ib.image = cv::imread("disparity_inbuit.png");	
 	sensor_msgs::Image ros_image_disp_ib = *(cvb_image_disp_ib.toImageMsg());
 	ros_image_disp_ib.header.frame_id = "image_from_file_disp_ib";
 	ros_image_disp_ib.encoding = sensor_msgs::image_encodings::BGR8;
@@ -210,11 +198,11 @@ int main(int argc, char **argv)
 	while (ros::ok())
 	{
 		t = ros::Time::now();
-		ros_image_l.header.stamp = t;	// all other values remain constant
+		ros_image_l.header.stamp = t;	
 		ros_image_r.header.stamp = t;
 		pub_file_l.publish(ros_image_l);
 		pub_file_r.publish(ros_image_r);
-		ros_image_disp_ssd.header.stamp = t;	// all other values remain constant
+		ros_image_disp_ssd.header.stamp = t;	
 		ros_image_disp_ib.header.stamp = t;
 		pub_file_disp_ssd.publish(ros_image_disp_ssd);
 		pub_file_disp_ib.publish(ros_image_disp_ib);
